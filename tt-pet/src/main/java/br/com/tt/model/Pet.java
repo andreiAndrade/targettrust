@@ -1,17 +1,20 @@
-package br.com.tt;
+package br.com.tt.model;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 import javax.persistence.Version;
-import javax.print.attribute.standard.Chromaticity;
 
 @Entity
 public class Pet {
@@ -25,8 +28,6 @@ public class Pet {
 
 	private String nome;
 
-	private String dono;
-
 	private LocalDate dataNasc;
 	@Transient
 	private LocalDate dataNascIni;
@@ -37,10 +38,12 @@ public class Pet {
 		return dataNasc == null ? null : ChronoUnit.YEARS.between(dataNasc, Instant.now());
 	}
 
-	private String especie;
+	@Enumerated(EnumType.STRING)
+	private EspecieType especie;
 
 	private String raca;
 
+	@ManyToOne(cascade=CascadeType.ALL)
 	private Proprietario proprietario;
 	
 	@Version
@@ -60,14 +63,6 @@ public class Pet {
 
 	public void setNome(String nome) {
 		this.nome = nome;
-	}
-
-	public String getDono() {
-		return dono;
-	}
-
-	public void setDono(String dono) {
-		this.dono = dono;
 	}
 
 	public LocalDate getDataNasc() {
@@ -94,12 +89,16 @@ public class Pet {
 		this.dataNascFim = dataNascFim;
 	}
 
-	public String getEspecie() {
+	public EspecieType getEspecie() {
 		return especie;
 	}
 
-	public void setEspecie(String especie) {
+	public void setEspecie(EspecieType especie) {
 		this.especie = especie;
+	}
+
+	public Integer getVersao() {
+		return versao;
 	}
 
 	public String getRaca() {

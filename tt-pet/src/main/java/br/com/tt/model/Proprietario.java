@@ -1,4 +1,4 @@
-package br.com.tt;
+package br.com.tt.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +13,10 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
+
+import br.com.tt.exception.PetException;
+import br.com.tt.exception.PetExceptionType;
+import br.com.tt.utilitario.cpf.CpfValidate;
 
 @Entity
 public class Proprietario {
@@ -32,9 +36,12 @@ public class Proprietario {
 
 	@OneToMany(mappedBy = "proprietario", cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
 	private List<Telefone> telefones;
-	
-	@OneToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-	private Endereco endereco ;
+
+	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
+	private Endereco endereco;
+
+	@OneToMany(mappedBy = "proprietario")
+	private List<Pet> pet;
 
 	public void addTelefone(Telefone telefone) {
 		if (!Objects.isNull(telefone)) {
@@ -43,6 +50,16 @@ public class Proprietario {
 			}
 			telefones.add(telefone);
 			telefone.setProprietario(this);
+		}
+	}
+
+	public void addPet(Pet pet) {
+		if (!Objects.isNull(pet)) {
+			if (Objects.isNull(this.pet)) {
+				this.pet = new ArrayList<Pet>();
+			}
+			this.pet.add(pet);
+			pet.setProprietario(this);
 		}
 	}
 
@@ -66,7 +83,10 @@ public class Proprietario {
 		return cpf;
 	}
 
-	public void setCpf(String cpf) {
+	public void setCpf(String cpf) throws PetException {
+		if (!CpfValidate.validate(cpf)) {
+			throw new PetException(PetExceptionType.CPF_INVALIDO);
+		}
 		this.cpf = cpf;
 	}
 

@@ -1,4 +1,4 @@
-package br.com.tt;
+package br.com.tt.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
