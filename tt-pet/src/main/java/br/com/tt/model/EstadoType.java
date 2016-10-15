@@ -1,4 +1,4 @@
-package br.com.tt;
+package br.com.tt.model;
 
 public enum EstadoType {
 	RS("Rio Grande do Sul"), 
